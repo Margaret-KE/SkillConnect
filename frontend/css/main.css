@@ -1,0 +1,16 @@
+/* GLOBAL STYLES - USED EVERYWHERE */
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+}
+
+h1, h3 {
+    text-align: center;
+    color: #1c4e80;
+}
+
+label {
+    font-weight: bold;
+}
