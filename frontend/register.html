@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillConnect Registration</title>
+
+    <!-- GLOBAL STYLES -->
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- PAGE STYLES -->
+    <link rel="stylesheet" href="css/register.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Mukurwe-ini Central SkillConnect</h1>
+    <h3>Kazi Kwa Mpango Initiative</h3>
+
+    <form id="registrationForm">
+
+        <h2>Personal Information</h2>
+
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="tel" id="phone" placeholder="Phone Number" required>
+        <input type="text" id="sublocation" placeholder="Sublocation" required>
+
+        <div class="row">
+            <input type="number" id="age" placeholder="Age">
+
+            <select id="gender">
+                <option value="">Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+            </select>
+        </div>
+
+        <input type="text" id="idno" placeholder="ID Number">
+
+        <label>Any Disability?</label>
+        <select id="disability">
+            <option>No</option>
+            <option>Yes</option>
+        </select>
+
+        <h2>Skills</h2>
+        <input type="text" id="primarySkill" placeholder="Primary Skill">
+        <input type="text" id="otherSkills" placeholder="Other Skills">
+
+        <h2>Education Background</h2>
+
+        <label>Certificate?</label>
+        <select id="certificate">
+            <option>No</option>
+            <option>Yes</option>
+        </select>
+
+        <label>Education Level</label>
+        <select id="education">
+            <option>Artisan</option>
+            <option>Certificate</option>
+            <option>Diploma</option>
+            <option>Higher Diploma</option>
+            <option>Degree</option>
+            <option>Masters</option>
+            <option>PhD</option>
+        </select>
+
+        <h2>Consent</h2>
+        <label>
+            <input type="checkbox" required>
+            I consent to my data being used for employment and planning purposes.
+        </label>
+
+        <button type="submit">Submit Registration</button>
+
+    </form>
+
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
