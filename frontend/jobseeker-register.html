@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Seeker Registration - SkillConnect</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/register.css">
+
+    <style>
+        body {
+            margin-top: 70px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f7fa;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #1c4e80;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 90px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+        }
+
+        button {
+            background: #1c4e80;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #145a96;
+        }
+
+        .popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 12px 20px;
+            display: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <div class="navbar" id="jobSeekerNav"></div>
+
+    <!-- FORM -->
+    <div class="container">
+        <h2>Job Seeker Registration</h2>
+
+        <form id="registerForm">
+
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="text" id="phone" placeholder="Phone Number" required>
+            <input type="text" id="sublocation" placeholder="Sublocation" required>
+
+            <input type="number" id="age" placeholder="Age">
+
+            <select id="gender">
+                <option value="">Gender</option>
+                <option>Male</option>
+                <option>Female</option>
+            </select>
+
+            <input type="text" id="idNumber" placeholder="ID Number">
+
+            <select id="disability">
+                <option>No</option>
+                <option>Yes</option>
+            </select>
+
+            <input type="text" id="primarySkill" placeholder="Primary Skill" required>
+            <input type="text" id="otherSkills" placeholder="Other Skills">
+
+            <select id="certificate">
+                <option>No</option>
+                <option>Yes</option>
+            </select>
+
+            <select id="educationLevel">
+                <option>Artisan</option>
+                <option>Certificate</option>
+                <option>Diploma</option>
+                <option>Degree</option>
+                <option>Masters</option>
+            </select>
+
+            <input type="file" id="cvUpload" accept=".pdf,.doc,.docx">
+
+            <label>
+                <input type="checkbox" id="consent" required>
+                I agree to data processing
+            </label>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <div id="popup" class="popup">Registration successful</div>
+
+    <script>
+        const API_BASE = "https://your-backend-domain.com/api";
+
+        /* ================= NAV ================= */
+        const nav = document.getElementById("jobSeekerNav");
+        const token = localStorage.getItem("jobseekerToken");
+
+        nav.innerHTML = token ? `
+            <a href="jobseeker-profile.html">Profile</a>
+            <a href="jobseeker-jobs.html">Jobs</a>
+            <a href="jobseeker-applications.html">Applications</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        ` : `
+            <a href="jobseeker-register.html">Register</a>
+            <a href="jobseeker-login.html">Login</a>
+        `;
+
+        if (token) {
+            document.getElementById("logoutBtn").onclick = () => {
+                localStorage.removeItem("jobseekerToken");
+                location.href = "jobseeker-login.html";
+            };
+        }
+
+        /* ================= HELPERS ================= */
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        /* ================= SUBMIT ================= */
+        document.getElementById("registerForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const cvFile = document.getElementById("cvUpload").files[0];
+            const popup = document.getElementById("popup");
+
+            let cv = "";
+            if (cvFile) cv = await fileToBase64(cvFile);
+
+            const payload = {
+                name: document.getElementById("name").value.trim(),
+                phone: document.getElementById("phone").value.trim(),
+                sublocation: document.getElementById("sublocation").value.trim(),
+                age: Number(document.getElementById("age").value) || null,
+                gender: document.getElementById("gender").value,
+                idNumber: document.getElementById("idNumber").value.trim(),
+                disability: document.getElementById("disability").value,
+                primarySkill: document.getElementById("primarySkill").value.trim(),
+                otherSkills: document.getElementById("otherSkills").value.trim(),
+                certificate: document.getElementById("certificate").value,
+                educationLevel: document.getElementById("educationLevel").value,
+                type: document.getElementById("sublocation").value.trim() ? "field" : "online",
+                cv
+            };
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/register`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    alert(data.message || "Registration failed");
+                    return;
+                }
+
+                /* SAVE JWT */
+                localStorage.setItem("jobseekerToken", data.token);
+
+                /* SHOW SUCCESS */
+                popup.style.display = "block";
+
+                setTimeout(() => {
+                    location.href = "jobseeker-jobs.html";
+                }, 1200);
+
+            } catch (err) {
+                console.error(err);
+                alert("Server error. Try again.");
+            }
+        });
+    </script>
+
+</body>
+</html>

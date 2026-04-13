@@ -1,85 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SkillConnect Registration</title>
+    <title>Mukurwe-ini Central SkillConnect</title>
 
-    <!-- GLOBAL STYLES -->
+    <!-- Styles -->
     <link rel="stylesheet" href="css/main.css">
-
-    <!-- PAGE STYLES -->
     <link rel="stylesheet" href="css/register.css">
+
+    <style>
+        /* NAVBAR */
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #1c4e80;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            z-index: 1000;
+        }
+        
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        
+        body {
+            margin-top: 70px;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+        /* SUCCESS POPUP */
+        
+        .popup {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 6px;
+            display: none;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+        }
+        
+        .popup.success {
+            background: #28a745;
+        }
+        /* green */
+        
+        .popup.offline {
+            background: #ff9800;
+        }
+        /* orange */
+    </style>
 </head>
 
 <body>
 
-<div class="container">
+    <!-- NAVIGATION -->
+    <div class="navbar">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register Skills</a>
+        <a href="employer.html">Employer Dashboard</a>
+        <a href="admin-login.html">Admin Login</a>
+        <a href="statistics.html">Statistics</a>
+    </div>
 
-    <h1>Mukurwe-ini Central SkillConnect</h1>
-    <h3>Kazi Kwa Mpango Initiative</h3>
+    <div class="container">
 
-    <form id="registrationForm">
+        <h1 style="color:blue;">Mukurwe-ini Central SkillConnect</h1>
+        <h3 style="color:black;">Kazi Kwa Mpango Initiative</h3>
 
-        <h2>Personal Information</h2>
+        <form id="registerForm">
 
-        <input type="text" id="name" placeholder="Full Name" required>
-        <input type="tel" id="phone" placeholder="Phone Number" required>
-        <input type="text" id="sublocation" placeholder="Sublocation" required>
+            <!-- PERSONAL -->
+            <h2>Personal Information</h2>
 
-        <div class="row">
-            <input type="number" id="age" placeholder="Age">
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="tel" id="phone" placeholder="Phone Number (0712345678)" pattern="[0-9]{10}" required>
+            <input type="text" id="sublocation" placeholder="Sublocation" required>
 
-            <select id="gender">
-                <option value="">Gender</option>
-                <option>Male</option>
-                <option>Female</option>
-            </select>
-        </div>
+            <div class="row">
+                <input type="number" id="age" placeholder="Age" min="18" max="100">
+                <select id="gender">
+<option value="">Gender</option>
+<option>Male</option>
+<option>Female</option>
+</select>
+            </div>
 
-        <input type="text" id="idno" placeholder="ID Number">
+            <input type="text" id="idNumber" placeholder="ID Number">
 
-        <label>Any Disability?</label>
-        <select id="disability">
-            <option>No</option>
-            <option>Yes</option>
-        </select>
+            <label>Any Disability?</label>
+            <select id="disability">
+<option>No</option>
+<option>Yes</option>
+</select>
 
-        <h2>Skills</h2>
-        <input type="text" id="primarySkill" placeholder="Primary Skill">
-        <input type="text" id="otherSkills" placeholder="Other Skills">
+            <!-- SKILLS -->
+            <h2>Skills</h2>
+            <input type="text" id="primarySkill" placeholder="Primary Skill">
+            <input type="text" id="otherSkills" placeholder="Other Skills">
 
-        <h2>Education Background</h2>
+            <!-- EDUCATION -->
+            <h2>Education Background</h2>
 
-        <label>Certificate?</label>
-        <select id="certificate">
-            <option>No</option>
-            <option>Yes</option>
-        </select>
+            <label>Certificate?</label>
+            <select id="certificate">
+<option>No</option>
+<option>Yes</option>
+</select>
 
-        <label>Education Level</label>
-        <select id="education">
-            <option>Artisan</option>
-            <option>Certificate</option>
-            <option>Diploma</option>
-            <option>Higher Diploma</option>
-            <option>Degree</option>
-            <option>Masters</option>
-            <option>PhD</option>
-        </select>
+            <label>Education Level</label>
+            <select id="educationLevel">
+<option>Artisan</option>
+<option>Certificate</option>
+<option>Diploma</option>
+<option>Higher Diploma</option>
+<option>Degree</option>
+<option>Masters</option>
+<option>PhD</option>
+</select>
 
-        <h2>Consent</h2>
-        <label>
-            <input type="checkbox" required>
-            I consent to my data being used for employment and planning purposes.
-        </label>
+            <!-- CV -->
+            <h2>CV Upload (Optional)</h2>
+            <input type="file" id="cvUpload" accept=".pdf,.doc,.docx">
 
-        <button type="submit">Submit Registration</button>
+            <!-- CONSENT -->
+            <h2>Consent</h2>
+            <label class="consent">
+<input type="checkbox" id="consent" required>
+I consent to my data being used for employment and planning purposes.
+</label>
 
-    </form>
+            <button type="submit">Submit Registration</button>
 
-</div>
+        </form>
+    </div>
 
-<script src="app.js"></script>
+    <!-- SUCCESS POPUP -->
+    <div id="successMessage" class="popup">✅ Submission successful!</div>
+
+    <script src="app.js"></script>
+
 </body>
+
 </html>

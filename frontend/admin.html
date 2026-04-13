@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillConnect Admin</title>
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <!-- LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        /* NAV */
+        .admin-nav {
+            background: #1c4e80;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-nav button {
+            margin-left: 6px;
+            padding: 6px 10px;
+            background: #0a192f;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* LAYOUT */
+        .container {
+            padding: 20px;
+        }
+
+        /* TABS */
+        .tab-section {
+            display: none;
+        }
+
+        .active-tab {
+            display: block;
+        }
+
+        /* DASHBOARD */
+        .dashboard-top {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .requests-panel {
+            width: 260px;
+            background: #fff3cd;
+            padding: 10px;
+            border-radius: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .dashboard-stats {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            flex: 1;
+        }
+
+        .card-small {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+
+        .card-large {
+            flex: 2;
+            min-width: 250px;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        th {
+            background: #0a192f;
+            color: white;
+        }
+
+        /* FILTERS */
+        .filters {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .filters input,
+        .filters select,
+        .filters button {
+            padding: 6px;
+        }
+
+        /* MODAL */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+
+        /* REQUEST ITEM */
+        .request-item {
+            background: white;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-left: 4px solid orange;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <div class="admin-nav">
+        <div>SkillConnect Admin Dashboard</div>
+        <div>
+            <button onclick="openTab('field')">Field Skills</button>
+            <button onclick="openTab('online')">Online</button>
+            <button onclick="openTab('jobs')">Jobs</button>
+            <button onclick="openTab('applicants')">Applicants</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="container">
+
+        <h2>Admin Dashboard</h2>
+
+        <!-- TOP -->
+        <div class="dashboard-top">
+
+            <div class="requests-panel">
+                <h3>Requests</h3>
+                <div id="requestsList"></div>
+            </div>
+
+            <div class="dashboard-stats">
+
+                <div class="card-small" style="background:#eef;">
+                    <h4>Workers</h4>
+                    <div id="statWorkers">0</div>
+                </div>
+
+                <div class="card-small" style="background:#efe;">
+                    <h4>Jobs</h4>
+                    <div id="statJobs">0</div>
+                </div>
+
+                <div class="card-large">
+                    <canvas id="skillChart"></canvas>
+                </div>
+
+                <div class="card-large">
+                    <canvas id="ageChart"></canvas>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FIELD -->
+        <div id="field" class="tab-section active-tab">
+            <h3>Field Skills</h3>
+
+            <div class="filters">
+                <input id="searchInput" placeholder="Search">
+                <input id="sublocationFilter" placeholder="Location">
+                <select id="genderFilter">
+                    <option value="">Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+                <input id="minAgeFilter" type="number" placeholder="Min Age">
+                <input id="maxAgeFilter" type="number" placeholder="Max Age">
+                <button onclick="exportTable('field')">Export PDF</button>
+            </div>
+
+            <table id="fieldTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>Phone</th>
+                        <th>Location</th>
+                        <th>Skill</th>
+                        <th>Match %</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- ONLINE -->
+        <div id="online" class="tab-section">
+            <h3>Online Jobseekers</h3>
+
+            <table id="onlineTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>Phone</th>
+                        <th>Location</th>
+                        <th>Skill</th>
+                        <th>Match %</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- JOBS -->
+        <div id="jobs" class="tab-section">
+            <h3>Jobs</h3>
+            <table id="jobsTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Skill</th>
+                        <th>Location</th>
+                        <th>Employer</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- APPLICANTS -->
+        <div id="applicants" class="tab-section">
+            <h3>Applicants</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Job</th>
+                        <th>Employer</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="applicantsTable"></tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- MODAL -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeModal()" style="float:right;cursor:pointer;">✖</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- GLOBAL HELPERS -->
+    <script>
+        function openTab(tab) {
+            document.querySelectorAll(".tab-section").forEach(t => t.classList.remove("active-tab"));
+            document.getElementById(tab).classList.add("active-tab");
+        }
+
+        function logout() {
+            localStorage.removeItem("adminToken");
+            window.location.href = "admin-login.html";
+        }
+
+        function closeModal() {
+            document.getElementById("viewModal").style.display = "none";
+        }
+
+        function viewUser(id) {
+            document.getElementById("viewModal").style.display = "flex";
+            document.getElementById("modalBody").innerHTML = "Loading...";
+        }
+    </script>
+
+    <!-- MAIN JS -->
+    <script src="admin.js"></script>
+
+</body>
+
+</html>

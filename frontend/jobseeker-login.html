@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Seeker Login - SkillConnect</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logo">SkillConnect</div>
+        <div class="nav-links" id="jobSeekerNavLinks"></div>
+    </div>
+
+    <div class="container">
+        <h1>Job Seeker Login</h1>
+
+        <div class="form-card">
+            <input type="text" id="nameInput" placeholder="Full Name">
+            <input type="text" id="phoneInput" placeholder="Phone">
+            <button id="loginBtn">Login</button>
+        </div>
+    </div>
+
+    <script>
+        /* ================= CONFIG ================= */
+        const API_BASE = "https://your-backend-domain.com/api";
+
+        /* ================= TOKEN ================= */
+        const token = localStorage.getItem("token");
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        /* ================= NAVBAR ================= */
+        const navLinksContainer = document.getElementById("jobSeekerNavLinks");
+
+        function renderNav() {
+            if (token && user) {
+                navLinksContainer.innerHTML = `
+                    <a href="jobseeker-profile.html">Profile</a>
+                    <a href="jobseeker-jobs.html">Jobs</a>
+                    <a href="jobseeker-applications.html">Applications</a>
+                    <a href="#" id="logoutBtn">Logout</a>
+                `;
+
+                document.getElementById("logoutBtn").onclick = logout;
+            } else {
+                navLinksContainer.innerHTML = `
+                    <a href="jobseeker-register.html">Register</a>
+                    <a href="jobseeker-login.html">Login</a>
+                `;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+            window.location.href = "jobseeker-login.html";
+        }
+
+        renderNav();
+
+        /* ================= LOGIN ================= */
+        document.getElementById("loginBtn").addEventListener("click", async () => {
+
+            const name = document.getElementById("nameInput").value.trim();
+            const phone = document.getElementById("phoneInput").value.trim();
+
+            if (!name || !phone) {
+                alert("Please enter Name and Phone");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name,
+                        phone,
+                        role: "jobseeker"
+                    })
+                });
+
+                const data = await res.json();
+
+                if (!data.success) {
+                    alert(data.message || "Login failed");
+                    return;
+                }
+
+                /* ================= SAVE AUTH ================= */
+                localStorage.setItem("token", data.token);
+                localStorage.setItem("user", JSON.stringify(data.user));
+
+                alert("✅ Login successful");
+
+                window.location.href = "jobseeker-jobs.html";
+
+            } catch (err) {
+                console.error(err);
+                alert("❌ Server error");
+            }
+        });
+
+        /* ================= ENTER KEY ================= */
+        document.getElementById("phoneInput").addEventListener("keypress", (e) => {
+            if (e.key === "Enter") {
+                document.getElementById("loginBtn").click();
+            }
+        });
+    </script>
+
+</body>
+</html>

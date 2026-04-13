@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Post Jobs - SkillConnect</title>
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1c4e80;
+            padding: 12px 20px;
+            color: white;
+        }
+        
+        .navbar .nav-links a {
+            color: white;
+            margin-left: 15px;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .form-card {
+            background: #f7f7f7;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .form-card input,
+        .form-card textarea {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+        }
+        
+        .form-card button {
+            background: #1c4e80;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+            width: 150px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th,
+        td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        
+        th {
+            background: #1c4e80;
+            color: white;
+        }
+        
+        td button {
+            margin-right: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 4px;
+        }
+        
+        .btn-delete {
+            background: red;
+            color: white;
+        }
+        
+        .btn-edit {
+            background: green;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="logo">SkillConnect</div>
+        <div class="nav-links">
+            <a href="employer.html">Dashboard</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Post a New Job</h1>
+
+        <div class="form-card">
+            <input type="text" id="jobTitle" placeholder="Job Title" required>
+            <input type="text" id="jobSkill" placeholder="Required Skill" required>
+            <input type="text" id="jobLocation" placeholder="Location" required>
+            <textarea id="jobDesc" placeholder="Job Description" rows="4"></textarea>
+            <button id="addJobBtn">Add Job</button>
+        </div>
+
+        <h2>Your Jobs</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Skill</th>
+                    <th>Location</th>
+                    <th>Employer</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="jobsTable"></tbody>
+        </table>
+    </div>
+
+    <!-- JS -->
+    <script src="post-job.js"></script>
+</body>
+
+</html>

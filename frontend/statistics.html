@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>SkillConnect Statistics</title>
+
+<link rel="stylesheet" href="css/main.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+.container{
+    width:90%;
+    margin:auto;
+    text-align:center;
+}
+
+.chart-row{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:40px;
+}
+
+.chart-box{
+    width:500px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Statistics & Analytics</h1>
+
+<button onclick="location.href='admin.html'">
+← Back to Dashboard
+</button>
+
+<div class="chart-row">
+
+<div class="chart-box">
+<h3>Skills Distribution</h3>
+<canvas id="skillChart"></canvas>
+</div>
+
+<div class="chart-box">
+<h3>Age Distribution</h3>
+<canvas id="ageChart"></canvas>
+</div>
+
+</div>
+
+<script src="statistics.js"></script>
+
+</body>
+</html>

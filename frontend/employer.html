@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Dashboard - SkillConnect</title>
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background: #0a192f;
+            color: white;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .filters input {
+            padding: 8px;
+            flex: 1;
+        }
+
+        .tab-section {
+            display: none;
+        }
+
+        .active-tab {
+            display: block;
+        }
+
+        .pagination {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .pagination button {
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<div class="navbar">
+    <div class="logo">SkillConnect Employer</div>
+
+    <div class="nav-links">
+        <a href="#" id="tabFieldBtn">Field Skills</a>
+        <a href="#" id="tabOnlineBtn">Online Jobseekers</a>
+        <a href="#" id="tabJobsBtn">Your Jobs</a>
+        <a href="#" id="tabApplicantsBtn">Applicants</a>
+        <a href="#" id="logoutBtn">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+
+    <h1 id="welcomeTitle">Employer Dashboard</h1>
+
+    <!-- FIELD -->
+    <div id="fieldSection" class="tab-section active-tab">
+        <h2>Field Skills</h2>
+
+        <div class="filters">
+            <input id="fieldSearch" placeholder="Search name or skill">
+            <input id="fieldLocation" placeholder="Sublocation">
+            <button id="fieldReset">Reset</button>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Phone</th>
+                <th>Sublocation</th>
+                <th>Skill</th>
+                <th>Match</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="fieldTable"></tbody>
+        </table>
+
+        <div class="pagination">
+            <button id="prevFieldBtn">Prev</button>
+            <span id="fieldPageNum"></span>
+            <button id="nextFieldBtn">Next</button>
+        </div>
+    </div>
+
+    <!-- ONLINE -->
+    <div id="onlineSection" class="tab-section">
+        <h2>Online Jobseekers</h2>
+
+        <div class="filters">
+            <input id="onlineSearch" placeholder="Search name or skill">
+            <input id="onlineLocation" placeholder="Sublocation">
+            <button id="onlineReset">Reset</button>
+        </div>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Gender</th>
+                <th>Age</th>
+                <th>Phone</th>
+                <th>Sublocation</th>
+                <th>Skill</th>
+                <th>Match</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="onlineTable"></tbody>
+        </table>
+
+        <div class="pagination">
+            <button id="prevOnlineBtn">Prev</button>
+            <span id="onlinePageNum"></span>
+            <button id="nextOnlineBtn">Next</button>
+        </div>
+    </div>
+
+    <!-- JOBS -->
+    <div id="jobsSection" class="tab-section">
+        <h2>Your Jobs</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Skill</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="jobsTable"></tbody>
+        </table>
+    </div>
+
+    <!-- APPLICANTS -->
+    <div id="applicantsSection" class="tab-section">
+        <h2>Applicants</h2>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Job</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="applicantsTable"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- MODAL -->
+<div id="viewModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">✖</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script src="employer.js"></script>
+
+</body>
+</html>

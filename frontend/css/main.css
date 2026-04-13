@@ -1,16 +1,579 @@
-/* GLOBAL STYLES - USED EVERYWHERE */
+/* =====================================================
+GLOBAL STYLES
+==================================================== */
 
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
     margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+    padding-top: 70px;
 }
 
-h1, h3 {
-    text-align: center;
+h1 {
+    color: #1c4e80;
+    margin-bottom: 10px;
+}
+
+h2,
+h3 {
     color: #1c4e80;
 }
 
-label {
-    font-weight: bold;
+
+/* =====================================================
+NAVBAR
+==================================================== */
+
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #1c4e80;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 25px;
+    box-sizing: border-box;
+    z-index: 1000;
+}
+
+.navbar .logo img {
+    height: 60px;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: nowrap;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+DROPDOWN MENUS
+==================================================== */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: white;
+    min-width: 180px;
+    border-radius: 6px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: all 0.25s ease;
+}
+
+.dropdown-content a {
+    color: #333;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.dropdown-content a:hover {
+    background: #f4f6f8;
+}
+
+.dropdown:hover .dropdown-content,
+.dropdown:focus-within .dropdown-content {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+
+/* =====================================================
+MOBILE MENU
+==================================================== */
+
+.menu-toggle {
+    display: none;
+    font-size: 26px;
+    color: white;
+    cursor: pointer;
+}
+
+.nav-links.show {
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =====================================================
+CONTAINERS
+==================================================== */
+
+.container {
+    width: 92%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+
+/* =====================================================
+BUTTONS
+==================================================== */
+
+button {
+    background: #1c4e80;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+button:hover {
+    background: #163d63;
+    transition: 0.2s;
+}
+
+button.secondary {
+    background: #2e8b57;
+}
+
+button.view-btn {
+    background: #ff9800;
+}
+
+button:disabled {
+    background: #999;
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+INPUTS & SELECTS
+==================================================== */
+
+input,
+select,
+textarea {
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+
+/* =====================================================
+FILTER BAR
+==================================================== */
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 20px 0;
+    align-items: center;
+}
+
+
+/* =====================================================
+DASHBOARD STATS
+==================================================== */
+
+.dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin: 20px 0;
+}
+
+.dashboard-stats div {
+    background: white;
+    padding: 18px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    font-weight: 600;
+    text-align: center;
+    font-size: 16px;
+}
+
+
+/* =====================================================
+TABLES
+==================================================== */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+thead {
+    background: #1c4e80;
+    color: white;
+}
+
+th,
+td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+}
+
+tr:hover {
+    background: #f1f7ff;
+}
+
+
+/* =====================================================
+MATCH SCORE COLORS
+==================================================== */
+
+.match-high {
+    color: #2e8b57;
+    font-weight: 700;
+}
+
+.match-mid {
+    color: #ff9800;
+    font-weight: 700;
+}
+
+.match-low {
+    color: #999;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+APPLICATION STATUS
+==================================================== */
+
+.status-applied {
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.status-invited {
+    background: #fff3cd;
+    color: #856404;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.status-accepted {
+    background: #d4edda;
+    color: #155724;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.status-rejected {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+
+/* =====================================================
+MODAL (VIEW DETAILS)
+==================================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 8px;
+}
+
+.modal-content hr {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 12px 0;
+}
+
+.close {
+    float: right;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+
+/* =====================================================
+PAGINATION
+==================================================== */
+
+.pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    align-items: center;
+}
+
+
+/* =====================================================
+HERO (LANDING PAGE)
+==================================================== */
+
+.hero {
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero h1 {
+    font-size: 42px;
+}
+
+.hero p {
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+.hero .narration {
+    font-size: 18px;
+    margin-top: 12px;
+    color: #00ff00;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.actions button {
+    margin: 10px 5px;
+}
+
+
+/* =====================================================
+FORM CARD
+==================================================== */
+
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.form-card input,
+.form-card select,
+.form-card textarea {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+
+/* =====================================================
+ABOUT + WHO BENEFITS
+==================================================== */
+
+.about-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.about-section,
+.benefits {
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.benefits-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.benefit-card {
+    background: #f4f6f9;
+    padding: 30px;
+    margin: 20px;
+    border-radius: 10px;
+    width: 280px;
+    text-align: center;
+}
+
+
+/* =====================================================
+FOUNDER
+==================================================== */
+
+.founder-section {
+    padding: 80px 40px;
+    background: #ffffff;
+}
+
+.founder-container {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.founder-container img {
+    width: 320px;
+    border-radius: 10px;
+}
+
+.founder-text {
+    max-width: 600px;
+}
+
+
+/* =====================================================
+GALLERY
+==================================================== */
+
+.gallery {
+    padding: 80px 40px;
+    background: #f4f6f9;
+}
+
+.gallery-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.gallery-grid img {
+    width: 300px;
+    border-radius: 10px;
+}
+
+
+/* =====================================================
+CTA
+==================================================== */
+
+.cta {
+    background: #007bff;
+    color: white;
+    text-align: center;
+    padding: 70px 20px;
+}
+
+.cta button {
+    padding: 15px 30px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+
+/* =====================================================
+FOOTER
+==================================================== */
+
+.footer {
+    margin-top: 40px;
+    background: #1c4e80;
+    color: white;
+    text-align: center;
+    padding: 25px;
+}
+
+.footer p {
+    margin: 6px 0;
+}
+
+
+/* =====================================================
+CHARTS
+==================================================== */
+
+canvas {
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 30px auto;
+    display: block;
+    max-width: 550px;
+    max-height: 420px;
+}
+
+
+/* =====================================================
+MOBILE RESPONSIVE
+==================================================== */
+
+@media(max-width:768px) {
+    .about-wrapper {
+        grid-template-columns: 1fr;
+    }
+    .filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    table {
+        font-size: 12px;
+    }
+    .hero h1 {
+        font-size: 30px;
+    }
+    .hero p {
+        font-size: 18px;
+    }
+    .hero .narration {
+        font-size: 16px;
+    }
+    .menu-toggle {
+        display: block;
+    }
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        right: 0;
+        top: 60px;
+        background: #1c4e80;
+        padding: 15px;
+        width: 220px;
+    }
+    .nav-links.show {
+        display: flex;
+    }
 }

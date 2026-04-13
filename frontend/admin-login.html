@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login - SkillConnect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> ```
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 350px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .login-card h2 {
+            text-align: center;
+            color: #1c4e80;
+            margin-bottom: 20px;
+        }
+        
+        .login-card input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+        
+        .login-card button {
+            width: 100%;
+            padding: 10px;
+            background: #1c4e80;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            border-radius: 6px;
+        }
+        
+        .login-card button:hover {
+            background-color: #163d63;
+        }
+        
+        .message {
+            color: red;
+            font-size: 13px;
+            text-align: center;
+            min-height: 18px;
+        }
+    </style>
+    ```
+
+</head>
+
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h2>Admin Login</h2>
+
+            ```
+            <div class="message" id="errorMsg"></div>
+
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+
+            <button id="loginBtn">Login</button>
+        </div>
+        ```
+
+    </div>
+
+    <!-- ✅ SCRIPT AT BOTTOM (FIXES YOUR ERROR) -->
+
+    <script>
+        console.log("✅ Admin Login Loaded");
+
+        /* AUTO REDIRECT IF ALREADY LOGGED IN */
+        const existingAdmin = JSON.parse(localStorage.getItem("loggedAdmin"));
+        if (existingAdmin) {
+            window.location.href = "admin.html";
+        }
+
+        /* LOGIN BUTTON */
+        document.getElementById("loginBtn").addEventListener("click", () => {
+
+            const username = document.getElementById("username").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const errorMsg = document.getElementById("errorMsg");
+
+            if (!username || !password) {
+                errorMsg.innerText = "Enter username and password";
+                return;
+            }
+
+            /* SIMPLE ADMIN LOGIN */
+            if (username === "admin" && password === "admin123") {
+
+                localStorage.setItem("loggedAdmin", JSON.stringify({
+                    username: "admin",
+                    role: "admin"
+                }));
+
+                window.location.href = "admin.html";
+
+            } else {
+                errorMsg.innerText = "Invalid login details";
+            }
+        });
+    </script>
+
+</body>
+
+</html>

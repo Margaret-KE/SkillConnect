@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Profile - SkillConnect</title>
+
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/register.css">
+
+    <style>
+        body {
+            margin-top: 70px;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f2f2f2;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h1, h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form input,
+        form select,
+        form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #1c4e80;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #145a96;
+        }
+
+        #cvDownload a {
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Your Profile</h1>
+    <h3>SkillConnect Profile Manager</h3>
+
+    <form id="profileForm">
+
+        <h2>Personal Information</h2>
+
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="tel" id="phone" placeholder="Phone Number" required>
+        <input type="text" id="sublocation" placeholder="Sublocation" required>
+
+        <input type="number" id="age" placeholder="Age" min="18" max="100">
+
+        <select id="gender">
+            <option value="">Gender</option>
+            <option>Male</option>
+            <option>Female</option>
+        </select>
+
+        <input type="text" id="idNumber" placeholder="ID Number">
+
+        <select id="disability">
+            <option>No</option>
+            <option>Yes</option>
+        </select>
+
+        <h2>Skills</h2>
+
+        <input type="text" id="primarySkill" placeholder="Primary Skill">
+        <input type="text" id="otherSkills" placeholder="Other Skills">
+
+        <h2>Education</h2>
+
+        <select id="certificate">
+            <option>No</option>
+            <option>Yes</option>
+        </select>
+
+        <select id="educationLevel">
+            <option>Artisan</option>
+            <option>Certificate</option>
+            <option>Diploma</option>
+            <option>Higher Diploma</option>
+            <option>Degree</option>
+            <option>Masters</option>
+            <option>PhD</option>
+        </select>
+
+        <h2>CV (Optional)</h2>
+        <input type="file" id="cvUpload" accept=".pdf,.doc,.docx">
+
+        <div id="cvDownload"></div>
+
+        <button type="button" id="saveProfileBtn">Save Profile</button>
+
+    </form>
+</div>
+
+<script>
+console.log("✅ Profile Page Loaded");
+
+/* ================= CONFIG ================= */
+const API_BASE = "https://your-backend-domain.com/api";
+
+/* ================= AUTH ================= */
+const token = localStorage.getItem("jobseekerToken");
+
+if (!token) {
+    alert("Login required");
+    window.location.href = "jobseeker-login.html";
+}
+
+/* ================= HEADERS ================= */
+function authHeaders() {
+    return {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+    };
+}
+
+/* ================= STATE ================= */
+let currentUser = null;
+
+/* ================= LOAD PROFILE ================= */
+async function loadProfile() {
+    try {
+        const res = await fetch(`${API_BASE}/jobseekers/profile`, {
+            headers: authHeaders()
+        });
+
+        if (!res.ok) throw new Error("Failed to load profile");
+
+        const user = await res.json();
+        currentUser = user;
+
+        if (!user) return;
+
+        document.getElementById("name").value = user.name || "";
+        document.getElementById("phone").value = user.phone || "";
+        document.getElementById("sublocation").value = user.sublocation || "";
+        document.getElementById("age").value = user.age || "";
+        document.getElementById("gender").value = user.gender || "";
+        document.getElementById("idNumber").value = user.idNumber || "";
+        document.getElementById("disability").value = user.disability || "No";
+        document.getElementById("primarySkill").value = user.primarySkill || "";
+        document.getElementById("otherSkills").value = user.otherSkills || "";
+        document.getElementById("certificate").value = user.certificate || "No";
+        document.getElementById("educationLevel").value = user.educationLevel || "Artisan";
+
+        if (user.cv) {
+            document.getElementById("cvDownload").innerHTML =
+                `<a href="${user.cv}" target="_blank">View CV</a>`;
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("❌ Failed to load profile");
+    }
+}
+
+/* ================= SAVE PROFILE ================= */
+document.getElementById("saveProfileBtn").addEventListener("click", async () => {
+
+    const file = document.getElementById("cvUpload").files[0];
+
+    let cvBase64 = currentUser?.cv || null;
+
+    if (file) {
+        cvBase64 = await new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.readAsDataURL(file);
+        });
+    }
+
+    const payload = {
+        name: document.getElementById("name").value.trim(),
+        phone: document.getElementById("phone").value.trim(),
+        sublocation: document.getElementById("sublocation").value.trim(),
+        age: parseInt(document.getElementById("age").value) || "",
+        gender: document.getElementById("gender").value,
+        idNumber: document.getElementById("idNumber").value.trim(),
+        disability: document.getElementById("disability").value,
+        primarySkill: document.getElementById("primarySkill").value.trim(),
+        otherSkills: document.getElementById("otherSkills").value.trim(),
+        certificate: document.getElementById("certificate").value,
+        educationLevel: document.getElementById("educationLevel").value,
+        type: document.getElementById("sublocation").value.trim() ? "field" : "online",
+        cv: cvBase64
+    };
+
+    try {
+        const res = await fetch(`${API_BASE}/jobseekers/profile`, {
+            method: "PUT",
+            headers: authHeaders(),
+            body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "❌ Failed to save");
+            return;
+        }
+
+        alert("✅ Profile updated successfully");
+
+        currentUser = data;
+
+        if (data.cv) {
+            document.getElementById("cvDownload").innerHTML =
+                `<a href="${data.cv}" target="_blank">View CV</a>`;
+        }
+
+    } catch (err) {
+        console.error(err);
+        alert("❌ Server error");
+    }
+});
+
+/* ================= INIT ================= */
+document.addEventListener("DOMContentLoaded", loadProfile);
+</script>
+
+</body>
+</html>

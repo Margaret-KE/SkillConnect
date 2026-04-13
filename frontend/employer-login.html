@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employer Login - SkillConnect</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Employer Login</h1>
+
+        <div class="form-card">
+            <input type="text" id="companyInput" placeholder="Company Name">
+            <input type="text" id="employerIdInput" placeholder="Employer ID">
+            <button id="loginBtn">Login</button>
+        </div>
+    </div>
+
+    <script>
+        console.log("✅ Employer Login Loaded");
+
+        /* ================= ELEMENTS ================= */
+        const companyInput = document.getElementById("companyInput");
+        const employerIdInput = document.getElementById("employerIdInput");
+        const loginBtn = document.getElementById("loginBtn");
+
+        /* ================= LOGIN ================= */
+        loginBtn.addEventListener("click", () => {
+
+            const company = companyInput.value.trim();
+            const id = employerIdInput.value.trim();
+
+            /* ===== VALIDATION ===== */
+            if (!company || !id) {
+                alert("Please fill all fields");
+                return;
+            }
+
+            if (id.length < 3) {
+                alert("Employer ID must be at least 3 characters");
+                return;
+            }
+
+            /* ===== CREATE EMPLOYER OBJECT ===== */
+            const employer = {
+                id: id,
+                company: company
+            };
+
+            /* ===== SAVE SESSION ===== */
+            localStorage.setItem("loggedEmployer", JSON.stringify(employer));
+
+            /* ===== SAVE TO GLOBAL EMPLOYERS DB ===== */
+            let employers = [];
+
+            try {
+                employers = JSON.parse(localStorage.getItem("skillconnect_employers")) || [];
+            } catch (e) {
+                employers = [];
+            }
+
+            /* ===== PREVENT DUPLICATES ===== */
+            const exists = employers.find(e => e.id === id);
+
+            if (!exists) {
+                employers.push(employer);
+                localStorage.setItem("skillconnect_employers", JSON.stringify(employers));
+            }
+
+            /* ===== SUCCESS ===== */
+            alert("✅ Login successful");
+
+            /* ===== REDIRECT ===== */
+            window.location.href = "employer.html";
+        });
+
+        /* ================= ENTER KEY SUPPORT ================= */
+        [companyInput, employerIdInput].forEach(input => {
+            input.addEventListener("keypress", (e) => {
+                if (e.key === "Enter") {
+                    loginBtn.click();
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,16 +1,322 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>SkillConnect</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mukurwe-ini Central SkillConnect</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="icon" href="images/logo.png">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        .hero img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Mukurwe-ini Central SkillConnect</h1>
-    <p>Kazi Kwa Mpango Initiative</p>
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="images/logo.png" alt="SkillConnect Logo">
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()"> ☰ </div>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="#about">About</a>
 
-    <button>Register Skills</button>
+            <div class="dropdown">
+                <a href="#">Job Seeker ▼</a>
+                <div class="dropdown-content">
+                    <a href="jobseeker-register.html">Register</a>
+                    <a href="jobseeker-login.html">Login</a>
+                    <a href="jobseeker-profile.html">Profile</a>
+                    <a href="jobseeker-jobs.html">Apply Jobs</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <a href="#">Employer ▼</a>
+                <div class="dropdown-content">
+                    <a href="employer.html">Login</a>
+                    <a href="post-job.html">Post Jobs</a>
+                    <a href="post-job.html">Manage Jobs</a>
+                </div>
+            </div>
+
+            <div class="dropdown">
+                <a href="#">Services ▼</a>
+                <div class="dropdown-content">
+                    <a href="#services">ATS CV Revamp</a>
+                    <a href="#services">Soft Skills Training</a>
+                    <a href="#services">Coaching Sessions</a>
+                    <a href="#services">LinkedIn Optimization</a>
+                    <a href="#services">Mentorship and Training</a>
+                </div>
+            </div>
+
+            <a href="#footer">Contact</a>
+        </div>
+
+        <button onclick="location.href='jobseeker-register.html'" class="secondary">Register Here</button>
+    </div>
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-text">
+            <h1>Mukurwe-ini Central SkillConnect</h1>
+            <p class="tagline">Kazi Kwa Mpango Initiative</p>
+            <p class="narration">
+                Connecting skilled youth, artisans, and professionals with real opportunities within our ward and beyond.
+            </p>
+            <div class="actions">
+                <button onclick="location.href='jobseeker-register.html'">Register Skills</button>
+                <button onclick="location.href='jobseeker-jobs.html'">Find Jobs</button>
+                <button class="secondary" onclick="location.href='employer.html'">Employer Dashboard</button>
+            </div>
+        </div>
+        <img src="images/hero.jpg" alt="Hero Image">
+    </div>
+
+    <!-- STATISTICS -->
+    <div class="stats">
+        <h2>Impact So Far</h2>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <h3 id="count1">0</h3>
+                <p>Registered Skills</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="count2">0</h3>
+                <p>Employers Connected</p>
+            </div>
+            <div class="stat-box">
+                <h3 id="count3">0</h3>
+                <p>Jobs Posted</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="about-wrapper" id="about">
+        <div class="about-section">
+            <h2>About Us</h2>
+            <p>
+                Mukurwe-ini Central SkillConnect is a structured digital platform under the Kazi Kwa Mpango Initiative designed to connect skilled youth, artisans, and professionals with real employment and growth opportunities.
+            </p>
+            <p>
+                We focus on visibility, empowerment, and economic transformation within our ward and beyond.
+            </p>
+        </div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="services" id="services">
+        <h2>Our Services</h2>
+        <ul>
+            <li>ATS CV Revamp</li>
+            <li>Soft Skills Training</li>
+            <li>Coaching Sessions</li>
+            <li>LinkedIn Optimization</li>
+            <li>Mentorship and Training</li>
+        </ul>
+
+        <div class="form-card">
+            <h3>Request a Service</h3>
+            <input type="text" id="clientName" placeholder="Enter Your Name">
+            <select id="serviceSelect">
+        <option value="">Select Service</option>
+        <option>ATS CV Revamp</option>
+        <option>Soft Skills Training</option>
+        <option>Coaching Sessions</option>
+        <option>LinkedIn Optimization</option>
+        <option>Mentorship and Training</option>
+      </select>
+            <button onclick="requestService()">Request Service</button>
+            <p id="serviceMsg" style="color:green;"></p>
+        </div>
+    </div>
+
+    <!-- MEET THE FOUNDER -->
+    <div class="founder-section" id="founder">
+        <h2>Meet The Founder</h2>
+        <div class="founder-container">
+            <img src="images/founder.jpg" alt="Founder Image">
+            <div class="founder-text">
+                <h3>Charles Makali</h3>
+                <p><strong>Aspirant</strong></p>
+                <p>
+                    I founded Mukurwe-ini Central SkillConnect to connect skilled youth, artisans, and professionals with real opportunities within our ward and beyond.
+                </p>
+                <p>
+                    My mission is to reduce unemployment, empower youth, and stimulate local economic growth through organized skill development systems.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- WHO BENEFITS -->
+    <div class="benefits" id="benefits">
+        <h2>Who Benefits?</h2>
+        <div class="benefits-grid">
+            <div class="benefit-card">
+                <h3>Youth & Skilled Workers</h3>
+                <p>Gain visibility and access to real job opportunities.</p>
+            </div>
+            <div class="benefit-card">
+                <h3>Employers</h3>
+                <p>Access trusted, registered and verified local talent.</p>
+            </div>
+            <div class="benefit-card">
+                <h3>Community</h3>
+                <p>Improved employment levels and local economic growth.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- GALLERY -->
+    <div class="gallery" id="gallery">
+        <h2>Photo Gallery</h2>
+        <div class="gallery-grid">
+            <img src="images/gallery1.jpg" alt="">
+            <img src="images/gallery2.jpg" alt="">
+            <img src="images/gallery3.jpg" alt="">
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta">
+        <h2>Join the Initiative Today</h2>
+        <button onclick="location.href='jobseeker-register.html'">Register Your Skill Now</button>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer" id="footer">
+        <strong>Mukurwe-ini Central SkillConnect</strong> <br><br> Kazi Kwa Mpango Initiative <br><br> 📞 Phone: +254 728 092 150 <br> ✉ Email: skillconnect@mukurweini.go.ke <br> 📍 Ward Office – Mukurwe-ini Central
+    </div>
+
+    <!-- SCRIPT -->
+ <script>
+/* ================= MOBILE MENU ================= */
+function toggleMenu() {
+    document.getElementById("navLinks").classList.toggle("show");
+}
+
+/* ================= CONFIG ================= */
+const API_BASE = "https://your-backend-domain.com/api";
+
+/* ================= STAT COUNTERS ================= */
+function animate(id, target) {
+    let count = 0;
+    const speed = 20;
+
+    const update = setInterval(() => {
+        count += Math.ceil(target / 100);
+
+        if (count >= target) {
+            count = target;
+            clearInterval(update);
+        }
+
+        const el = document.getElementById(id);
+        if (el) el.innerText = count;
+    }, speed);
+}
+
+/* start animation (initial placeholders) */
+animate("count1", 0);
+animate("count2", 0);
+animate("count3", 0);
+
+/* ================= LIVE STATS FROM BACKEND ================= */
+async function updateStats() {
+    try {
+        const [usersRes, jobsRes] = await Promise.all([
+            fetch(`${API_BASE}/jobseekers`),
+            fetch(`${API_BASE}/jobs`)
+        ]);
+
+        if (!usersRes.ok || !jobsRes.ok) throw new Error("Failed to load stats");
+
+        const users = await usersRes.json();
+        const jobs = await jobsRes.json();
+
+        const userCount = users?.length || 0;
+        const jobCount = jobs?.length || 0;
+
+        // employer count not yet backend-controlled (safe default)
+        const employerCount = 0;
+
+        animate("count1", userCount);
+        animate("count2", employerCount);
+        animate("count3", jobCount);
+
+    } catch (err) {
+        console.error("Stats error:", err);
+    }
+}
+
+/* run on load */
+document.addEventListener("DOMContentLoaded", updateStats);
+
+/* ================= SERVICE REQUEST ================= */
+function requestService() {
+    const serviceEl = document.getElementById("serviceSelect");
+    const service = serviceEl ? serviceEl.value : "";
+
+    if (!service) {
+        alert("Select a service");
+        return;
+    }
+
+    sendRequest(service);
+}
+
+async function sendRequest(service) {
+    const user = JSON.parse(localStorage.getItem("loggedJobSeeker"));
+
+    /* ================= AUTH CHECK ================= */
+    if (!user) {
+        alert("Login required");
+        window.location.href = "jobseeker-login.html";
+        return;
+    }
+
+    try {
+        const res = await fetch(`${API_BASE}/requests`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: user.name,
+                phone: user.phone,
+                service
+            })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "❌ Failed to send request");
+            return;
+        }
+
+        alert("✅ Request sent");
+
+        if (serviceEl) serviceEl.value = "";
+
+    } catch (err) {
+        console.error(err);
+        alert("❌ Server error");
+    }
+}
+</script>
 </body>
 
-<script src="script.js"></script>
 </html>

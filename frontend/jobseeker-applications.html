@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications - SkillConnect</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <div class="navbar">
+        <div class="logo">SkillConnect</div>
+        <div class="nav-links" id="jobSeekerNavLinks"></div>
+    </div>
+
+    <!-- ================= CONTAINER ================= -->
+    <div class="container">
+
+        <h1>My Applications / Invitations</h1>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Job</th>
+                    <th>Skill</th>
+                    <th>Employer</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="jobseekerApplicationsTable"></tbody>
+        </table>
+
+    </div>
+
+    <script>
+
+console.log("✅ Jobseeker Applications Loaded");
+
+/* ================= CONFIG ================= */
+const API_BASE = "https://your-backend-domain.com/api";
+
+/* ================= AUTH ================= */
+const token = localStorage.getItem("jobseekerToken");
+
+if (!token) {
+    alert("Login required");
+    window.location.href = "jobseeker-login.html";
+}
+
+/* ================= AUTH HEADER ================= */
+function getAuthHeaders() {
+    return {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+    };
+}
+
+/* ================= NAVBAR ================= */
+const navLinksContainer = document.getElementById("jobSeekerNavLinks");
+
+navLinksContainer.innerHTML = `
+    <a href="jobseeker-profile.html">Profile</a>
+    <a href="jobseeker-jobs.html">Jobs</a>
+    <a href="jobseeker-applications.html">Applications</a>
+    <a href="#" id="logoutBtn">Logout</a>
+`;
+
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.removeItem("jobseekerToken");
+    window.location.href = "jobseeker-login.html";
+});
+
+/* ================= DATA ================= */
+let USER_PHONE = "";
+
+/* ================= GET CURRENT USER ================= */
+async function getMe() {
+    const res = await fetch(`${API_BASE}/auth/me`, {
+        headers: getAuthHeaders()
+    });
+
+    if (!res.ok) {
+        throw new Error("Auth failed");
+    }
+
+    const user = await res.json();
+    USER_PHONE = user.phone;
+}
+
+/* ================= FETCH APPLICATIONS ================= */
+async function renderMyApplications() {
+    const tbody = document.getElementById("jobseekerApplicationsTable");
+    tbody.innerHTML = "";
+
+    try {
+        await getMe();
+
+        const res = await fetch(`${API_BASE}/applications/user/${USER_PHONE}`);
+        const apps = await res.json();
+
+        if (!apps || apps.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="7" style="text-align:center;">
+                        No applications or invitations yet
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+
+        apps.forEach(app => {
+            const status = app.status || "applied";
+
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+                <td>${app.jobTitle || "-"}</td>
+                <td>${app.skill || "-"}</td>
+                <td>${app.employerName || "-"}</td>
+                <td>${app.location || "-"}</td>
+                <td>${status}</td>
+                <td>${app.date ? new Date(app.date).toLocaleDateString() : "-"}</td>
+                <td>
+                    ${status === "invited" ? `
+                        <button onclick="updateStatus('${app.id}', 'accepted')">Accept</button>
+                        <button onclick="updateStatus('${app.id}', 'rejected')">Reject</button>
+                    ` : "-"}
+                </td>
+            `;
+
+            tbody.appendChild(tr);
+        });
+
+    } catch (err) {
+        console.error(err);
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="7" style="text-align:center;color:red;">
+                    Failed to load applications
+                </td>
+            </tr>
+        `;
+    }
+}
+
+/* ================= UPDATE STATUS ================= */
+async function updateStatus(appId, status) {
+    try {
+        const res = await fetch(`${API_BASE}/applications/${appId}`, {
+            method: "PUT",
+            headers: getAuthHeaders(),
+            body: JSON.stringify({ status })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(data.message || "Failed to update");
+            return;
+        }
+
+        await renderMyApplications();
+
+    } catch (err) {
+        console.error(err);
+        alert("Failed to update application");
+    }
+}
+
+/* ================= INIT ================= */
+document.addEventListener("DOMContentLoaded", renderMyApplications);
+</script>
+
+</body>
+
+</html>

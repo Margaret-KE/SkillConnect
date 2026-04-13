@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Employer Management - SkillConnect</title>
+
+    <link rel="stylesheet" href="css/main.css">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0a192f;
+            color: white;
+            padding: 10px 20px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .menu-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 22px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                right: 0;
+                top: 60px;
+                background: #0a192f;
+                width: 200px;
+                padding: 10px;
+            }
+
+            .nav-links.show {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: #00c3ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* FILTERS */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filters input,
+        .filters select {
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* TABLE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background: #007bff;
+            color: white;
+        }
+
+        /* PAGINATION */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div><b>SkillConnect Admin Employer</b></div>
+        <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="admin-login.html">Logout</a>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="container">
+
+        <h2>Admin Employer Management</h2>
+
+        <!-- TABS -->
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="skillsTab">Field Skills</button>
+            <button class="tab-btn" data-tab="jobseekersTab">Online Jobseekers</button>
+            <button class="tab-btn" data-tab="jobsTab">Jobs</button>
+        </div>
+
+        <!-- FIELD SKILLS -->
+        <div id="skillsTab" class="tab-content active">
+
+            <div class="filters">
+                <input id="skillNameFilter" placeholder="Search Name or Skill">
+                <input id="skillSublocationFilter" placeholder="Sublocation">
+
+                <select id="skillGenderFilter">
+                    <option value="">All Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+
+                <button id="resetSkillsFiltersBtn">Reset</button>
+            </div>
+
+            <table id="skillsTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>Sublocation</th>
+                        <th>Primary Skill</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <div class="pagination">
+                <button id="prevSkillsBtn">Prev</button>
+                <span id="currentSkillsPage">1</span>
+                <button id="nextSkillsBtn">Next</button>
+            </div>
+        </div>
+
+        <!-- JOBSEEKERS -->
+        <div id="jobseekersTab" class="tab-content">
+
+            <div class="filters">
+                <input id="jobseekerNameFilter" placeholder="Search Name or Skill">
+                <input id="jobseekerSublocationFilter" placeholder="Sublocation">
+
+                <select id="jobseekerGenderFilter">
+                    <option value="">All Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+
+                <button id="resetJobseekersFiltersBtn">Reset</button>
+            </div>
+
+            <table id="jobseekersTable">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Gender</th>
+                        <th>Age</th>
+                        <th>Phone</th>
+                        <th>Sublocation</th>
+                        <th>Primary Skill</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <div class="pagination">
+                <button id="prevJobseekersBtn">Prev</button>
+                <span id="currentJobseekersPage">1</span>
+                <button id="nextJobseekersBtn">Next</button>
+            </div>
+        </div>
+
+        <!-- JOBS -->
+        <div id="jobsTab" class="tab-content">
+
+            <table id="adminJobsTable">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Skill</th>
+                        <th>Location</th>
+                        <th>Employer</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- MODAL -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">✖</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script src="admin-employer.js"></script>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById("navLinks").classList.toggle("show");
+        }
+
+        document.querySelectorAll(".tab-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+                document.querySelectorAll(".tab-content").forEach(t => t.classList.remove("active"));
+
+                btn.classList.add("active");
+                document.getElementById(btn.dataset.tab).classList.add("active");
+            });
+        });
+
+        document.getElementById("resetSkillsFiltersBtn").onclick = () => {
+            document.getElementById("skillNameFilter").value = "";
+            document.getElementById("skillSublocationFilter").value = "";
+            document.getElementById("skillGenderFilter").value = "";
+        };
+
+        document.getElementById("resetJobseekersFiltersBtn").onclick = () => {
+            document.getElementById("jobseekerNameFilter").value = "";
+            document.getElementById("jobseekerSublocationFilter").value = "";
+            document.getElementById("jobseekerGenderFilter").value = "";
+        };
+    </script>
+
+</body>
+</html>
