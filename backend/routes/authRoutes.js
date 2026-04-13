@@ -6,7 +6,7 @@ const Jobseeker = require("../models/Jobseeker");
 const JWT_SECRET = process.env.JWT_SECRET || "change_this_secret";
 
 /* ================= LOGIN / AUTO REGISTER ================= */
-router.post("/login", async (req, res) => {
+router.post("/login", async(req, res) => {
     try {
         const { name, phone } = req.body;
 
@@ -29,13 +29,11 @@ router.post("/login", async (req, res) => {
         }
 
         /* ================= JWT TOKEN ================= */
-        const token = jwt.sign(
-            {
+        const token = jwt.sign({
                 id: user._id,
                 type: user.type
             },
-            JWT_SECRET,
-            { expiresIn: "7d" }
+            JWT_SECRET, { expiresIn: "7d" }
         );
 
         res.json({
@@ -50,7 +48,7 @@ router.post("/login", async (req, res) => {
         });
 
     } catch (err) {
-        console.error("❌ AUTH ERROR:", err);
+        console.error(" AUTH ERROR:", err);
         res.status(500).json({
             success: false,
             message: "Authentication failed"
@@ -59,7 +57,7 @@ router.post("/login", async (req, res) => {
 });
 
 /* ================= VERIFY TOKEN (IMPORTANT FOR FRONTEND) ================= */
-router.get("/me", async (req, res) => {
+router.get("/me", async(req, res) => {
     try {
         const authHeader = req.headers.authorization;
 
@@ -86,7 +84,7 @@ router.get("/me", async (req, res) => {
         res.json(user);
 
     } catch (err) {
-        console.error("❌ VERIFY ERROR:", err.message);
+        console.error(" VERIFY ERROR:", err.message);
 
         return res.status(401).json({
             success: false,

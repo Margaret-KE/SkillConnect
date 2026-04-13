@@ -24,8 +24,8 @@ const JobseekerSchema = new mongoose.Schema({
     age: Number,
     gender: String,
 
-    idNumber: String,        // ✅ added
-    disability: String,      // ✅ added
+    idNumber: String, //  added
+    disability: String, //  added
 
     primarySkill: String,
     otherSkills: String,
@@ -35,7 +35,7 @@ const JobseekerSchema = new mongoose.Schema({
     cv: String,
 
 }, {
-    timestamps: true // ✅ auto adds createdAt & updatedAt
+    timestamps: true //  auto adds createdAt & updatedAt
 });
 
 module.exports = mongoose.model("Jobseeker", JobseekerSchema);

@@ -13,7 +13,7 @@ async function testConnection() {
             serverSelectionTimeoutMS: 10000, // 10s timeout
         });
 
-        console.log("✅ MongoDB connection successful");
+        console.log(" MongoDB connection successful");
 
         await mongoose.disconnect();
         console.log("🔌 Disconnected cleanly");
@@ -21,7 +21,7 @@ async function testConnection() {
         process.exit(0);
 
     } catch (err) {
-        console.error("❌ MongoDB connection failed:");
+        console.error(" MongoDB connection failed:");
         console.error(err.message);
 
         try {

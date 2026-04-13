@@ -15,7 +15,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.use(express.json({ limit: "10mb" })); 
+app.use(express.json({ limit: "10mb" }));
 // ✅ increased for CV uploads (base64 files)
 
 /* ================= ROUTES ================= */
@@ -36,14 +36,14 @@ app.use("/api/jobseekers", jobseekerRoutes);
 app.get("/", (req, res) => {
     res.json({
         status: "OK",
-        message: "🚀 SkillConnect API Running",
+        message: " SkillConnect API Running",
         time: new Date().toISOString()
     });
 });
 
 /* ================= ERROR HANDLER (IMPORTANT) ================= */
 app.use((err, req, res, next) => {
-    console.error("❌ Server Error:", err.message);
+    console.error(" Server Error:", err.message);
     res.status(500).json({
         success: false,
         message: "Internal Server Error"
@@ -53,14 +53,14 @@ app.use((err, req, res, next) => {
 /* ================= DATABASE CONNECTION ================= */
 mongoose.connect(MONGO_URI)
     .then(() => {
-        console.log("✅ MongoDB Connected");
+        console.log(" MongoDB Connected");
     })
     .catch(err => {
-        console.error("❌ DB Error:", err);
+        console.error(" DB Error:", err);
         process.exit(1);
     });
 
 /* ================= START SERVER ================= */
 app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(` Server running on port ${PORT}`);
 });
