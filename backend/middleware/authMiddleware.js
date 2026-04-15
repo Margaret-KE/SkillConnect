@@ -1,4 +1,3 @@
-// middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = process.env.JWT_SECRET || "secret123";
@@ -12,7 +11,11 @@ function verifyToken(req, res, next) {
             return res.status(401).json({ message: "No token provided" });
         }
 
-        const token = authHeader.split(" ")[1];
+        // SUPPORT BOTH:
+        // "Bearer token" OR "token"
+        const token = authHeader.startsWith("Bearer ") ?
+            authHeader.split(" ")[1] :
+            authHeader;
 
         if (!token) {
             return res.status(401).json({ message: "Malformed token" });
@@ -20,7 +23,7 @@ function verifyToken(req, res, next) {
 
         const decoded = jwt.verify(token, JWT_SECRET);
 
-        req.user = decoded; // { id, role }
+        req.user = decoded; // { id, username, role }
         next();
 
     } catch (err) {
@@ -32,9 +35,14 @@ function verifyToken(req, res, next) {
 /* ================= ROLE GUARD ================= */
 function allowRoles(...roles) {
     return (req, res, next) => {
-        if (!req.user || !roles.includes(req.user.role)) {
+        if (!req.user) {
+            return res.status(401).json({ message: "Not authenticated" });
+        }
+
+        if (!roles.includes(req.user.role)) {
             return res.status(403).json({ message: "Access denied" });
         }
+
         next();
     };
 }

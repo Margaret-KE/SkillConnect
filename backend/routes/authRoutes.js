@@ -56,7 +56,7 @@ router.post("/login", async(req, res) => {
     }
 });
 
-/* ================= VERIFY TOKEN (IMPORTANT FOR FRONTEND) ================= */
+/* ================= VERIFY TOKEN ================= */
 router.get("/me", async(req, res) => {
     try {
         const authHeader = req.headers.authorization;
