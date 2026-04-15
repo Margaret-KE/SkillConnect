@@ -79,11 +79,11 @@
 
 <body>
 
+    ```
     <div class="login-container">
         <div class="login-card">
             <h2>Admin Login</h2>
 
-            ```
             <div class="message" id="errorMsg"></div>
 
             <input type="text" id="username" placeholder="Username">
@@ -91,23 +91,19 @@
 
             <button id="loginBtn">Login</button>
         </div>
-        ```
-
     </div>
 
-    <!-- ✅ SCRIPT AT BOTTOM (FIXES YOUR ERROR) -->
-
     <script>
-        console.log("✅ Admin Login Loaded");
+        console.log("Admin Login Loaded");
 
         /* AUTO REDIRECT IF ALREADY LOGGED IN */
-        const existingAdmin = JSON.parse(localStorage.getItem("loggedAdmin"));
-        if (existingAdmin) {
+        const token = localStorage.getItem("adminToken");
+        if (token) {
             window.location.href = "admin.html";
         }
 
         /* LOGIN BUTTON */
-        document.getElementById("loginBtn").addEventListener("click", () => {
+        document.getElementById("loginBtn").addEventListener("click", async() => {
 
             const username = document.getElementById("username").value.trim();
             const password = document.getElementById("password").value.trim();
@@ -118,21 +114,37 @@
                 return;
             }
 
-            /* SIMPLE ADMIN LOGIN */
-            if (username === "admin" && password === "admin123") {
+            try {
+                const res = await fetch("/api/admin/login", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password
+                    })
+                });
 
-                localStorage.setItem("loggedAdmin", JSON.stringify({
-                    username: "admin",
-                    role: "admin"
-                }));
+                const data = await res.json();
+
+                if (!data.success) {
+                    errorMsg.innerText = data.message;
+                    return;
+                }
+
+                /* STORE TOKEN + ADMIN */
+                localStorage.setItem("adminToken", data.token);
+                localStorage.setItem("loggedAdmin", JSON.stringify(data.admin));
 
                 window.location.href = "admin.html";
 
-            } else {
-                errorMsg.innerText = "Invalid login details";
+            } catch (err) {
+                errorMsg.innerText = "Server error";
             }
         });
     </script>
+    ```
 
 </body>
 

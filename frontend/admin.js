@@ -1,7 +1,7 @@
-console.log("✅ Admin Dashboard Loaded");
+console.log("Admin Dashboard Loaded");
 
 /* ================= CONFIG ================= */
-const API_BASE = "https://your-backend-domain.com/api";
+const API_BASE = "/api"; // use relative path for VPS
 
 /* ================= AUTH ================= */
 const token = localStorage.getItem("adminToken");
@@ -17,6 +17,28 @@ function getAuthHeaders() {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
     };
+}
+
+/* ================= SAFE FETCH ================= */
+async function safeFetch(url, options = {}) {
+    try {
+        const res = await fetch(url, options);
+
+        if (res.status === 401 || res.status === 403) {
+            localStorage.removeItem("adminToken");
+            localStorage.removeItem("loggedAdmin");
+            alert("Session expired. Please login again.");
+            window.location.href = "admin-login.html";
+            return null;
+        }
+
+        return res;
+
+    } catch (err) {
+        console.error("Network error:", err);
+        alert("Network error");
+        return null;
+    }
 }
 
 /* ================= STATE ================= */
@@ -37,15 +59,13 @@ const pageSize = 20;
 async function loadData() {
     try {
         const [usersRes, jobsRes, appsRes, reqRes] = await Promise.all([
-            fetch(`${API_BASE}/jobseekers`, { headers: getAuthHeaders() }),
-            fetch(`${API_BASE}/jobs`, { headers: getAuthHeaders() }),
-            fetch(`${API_BASE}/applications`, { headers: getAuthHeaders() }),
-            fetch(`${API_BASE}/requests`, { headers: getAuthHeaders() })
+            safeFetch(`${API_BASE}/jobseekers`, { headers: getAuthHeaders() }),
+            safeFetch(`${API_BASE}/jobs`, { headers: getAuthHeaders() }),
+            safeFetch(`${API_BASE}/applications`, { headers: getAuthHeaders() }),
+            safeFetch(`${API_BASE}/requests`, { headers: getAuthHeaders() })
         ]);
 
-        if (!usersRes.ok || !jobsRes.ok || !appsRes.ok || !reqRes.ok) {
-            throw new Error("Failed to load dashboard data");
-        }
+        if (!usersRes || !jobsRes || !appsRes || !reqRes) return;
 
         allUsers = await usersRes.json();
         allJobs = await jobsRes.json();
@@ -59,7 +79,7 @@ async function loadData() {
         updateStats();
 
     } catch (err) {
-        console.error("❌ Load error:", err);
+        console.error("Load error:", err);
         alert("Failed to load dashboard");
     }
 }
@@ -75,7 +95,7 @@ function applyFilters() {
     const filterFn = (u) => {
         if (txt &&
             !(u.name?.toLowerCase().includes(txt) ||
-              u.primarySkill?.toLowerCase().includes(txt))) return false;
+                u.primarySkill?.toLowerCase().includes(txt))) return false;
 
         if (subTxt && !u.sublocation?.toLowerCase().includes(subTxt)) return false;
         if (!isNaN(minAge) && u.age < minAge) return false;
@@ -123,9 +143,7 @@ function renderFieldTable() {
     const start = (currentPageField - 1) * pageSize;
     const pageData = filteredField.slice(start, start + pageSize);
 
-    tbody.innerHTML = pageData.length
-        ? ""
-        : "<tr><td colspan='9'>No records</td></tr>";
+    tbody.innerHTML = pageData.length ? "" : "<tr><td colspan='9'>No records</td></tr>";
 
     pageData.forEach(u => {
         const id = u._id || u.id;
@@ -157,9 +175,7 @@ function renderOnlineTable() {
     const start = (currentPageOnline - 1) * pageSize;
     const pageData = filteredOnline.slice(start, start + pageSize);
 
-    tbody.innerHTML = pageData.length
-        ? ""
-        : "<tr><td colspan='9'>No records</td></tr>";
+    tbody.innerHTML = pageData.length ? "" : "<tr><td colspan='9'>No records</td></tr>";
 
     pageData.forEach(u => {
         const id = u._id || u.id;
@@ -188,14 +204,12 @@ function renderJobsTable() {
     const tbody = document.querySelector("#jobsTable tbody");
     if (!tbody) return;
 
-    tbody.innerHTML = allJobs.length
-        ? ""
-        : "<tr><td colspan='7'>No jobs</td></tr>";
+    tbody.innerHTML = allJobs.length ? "" : "<tr><td colspan='7'>No jobs</td></tr>";
 
     allJobs.forEach(job => {
-        const id = job._id || job.id;
+                const id = job._id || job.id;
 
-        tbody.innerHTML += `
+                tbody.innerHTML += `
             <tr>
                 <td>${job.title}</td>
                 <td>${job.skill}</td>
@@ -216,7 +230,7 @@ function renderJobsTable() {
 
 /* ================= JOB ACTIONS ================= */
 async function approveJob(id) {
-    await fetch(`${API_BASE}/jobs/${id}/approve`, {
+    await safeFetch(`${API_BASE}/jobs/${id}/approve`, {
         method: "PUT",
         headers: getAuthHeaders()
     });
@@ -224,7 +238,7 @@ async function approveJob(id) {
 }
 
 async function rejectJob(id) {
-    await fetch(`${API_BASE}/jobs/${id}/reject`, {
+    await safeFetch(`${API_BASE}/jobs/${id}/reject`, {
         method: "PUT",
         headers: getAuthHeaders()
     });
@@ -235,7 +249,7 @@ async function rejectJob(id) {
 async function deleteUser(id) {
     if (!confirm("Delete this user?")) return;
 
-    await fetch(`${API_BASE}/jobseekers/${id}`, {
+    await safeFetch(`${API_BASE}/jobseekers/${id}`, {
         method: "DELETE",
         headers: getAuthHeaders()
     });
@@ -271,13 +285,11 @@ function renderRequests() {
     const container = document.getElementById("requestsList");
     if (!container) return;
 
-    container.innerHTML = allRequests.length
-        ? ""
-        : "<p>No requests</p>";
+    container.innerHTML = allRequests.length ? "" : "<p>No requests</p>";
 
     allRequests.forEach(r => {
         container.innerHTML += `
-            <div>
+            <div class="request-item">
                 <strong>${r.name}</strong><br>
                 ${r.service}<br>
                 ${r.phone}
@@ -295,7 +307,7 @@ function updateStats() {
     if (j) j.textContent = allJobs.length;
 }
 
-/* ================= PDF EXPORT (SAFE) ================= */
+/* ================= PDF EXPORT ================= */
 function exportTable(type) {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
